@@ -49,13 +49,13 @@ class FirebaseDatabase {
 
     async waitForFirebase() {
         let attempts = 0;
-        while (!window.firestore && attempts < 50) {
+        while ((!window.firebaseReady || !window.firestore || !window.FirebaseFunctions) && attempts < 100) {
             await new Promise(resolve => setTimeout(resolve, 100));
             attempts++;
         }
         
-        if (!window.firestore) {
-            throw new Error('Firebase failed to initialize');
+        if (!window.firebaseReady || !window.firestore || !window.FirebaseFunctions) {
+            throw new Error('Firebase failed to initialize properly');
         }
     }
 
