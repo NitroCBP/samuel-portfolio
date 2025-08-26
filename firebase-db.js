@@ -173,19 +173,49 @@ class FirebaseDatabase {
                 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    // Fetch the actual file from storage
-                    const response = await fetch(data.downloadURL);
-                    const blob = await response.blob();
                     
-                    // Update local cache
-                    await this.localDb.putAsset(key, blob);
+                    // Use Firebase Storage reference to get blob directly
+                    const storageRef = window.FirebaseFunctions.ref(this.storage, `assets/${key}`);
                     
-                    return {
-                        key: data.key,
-                        blob: blob,
-                        mime: data.mime,
-                        updatedAt: data.updatedAt
-                    };
+                    try {
+                        // Get download URL and fetch with proper headers
+                        const downloadURL = await window.FirebaseFunctions.getDownloadURL(storageRef);
+                        const response = await fetch(downloadURL, {
+                            mode: 'cors',
+                            credentials: 'omit'
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        
+                        const blob = await response.blob();
+                        
+                        // Update local cache
+                        await this.localDb.putAsset(key, blob);
+                        
+                        return {
+                            key: data.key,
+                            blob: blob,
+                            mime: data.mime,
+                            updatedAt: data.updatedAt
+                        };
+                        
+                    } catch (fetchError) {
+                        console.warn('Failed to fetch asset blob, trying alternative method:', fetchError);
+                        
+                        // Alternative: Create blob URL directly from Firebase Storage
+                        const downloadURL = data.downloadURL;
+                        
+                        // Return metadata with download URL for direct use
+                        return {
+                            key: data.key,
+                            downloadURL: downloadURL,
+                            mime: data.mime,
+                            updatedAt: data.updatedAt,
+                            isCloudAsset: true
+                        };
+                    }
                 }
             } catch (error) {
                 console.warn('Failed to get asset from cloud, using local:', error);

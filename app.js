@@ -51,25 +51,49 @@ class App {
             // Load background image
             const bgAsset = await db.getAsset('backgroundImage');
             if (bgAsset) {
-                const bgUrl = Utils.createObjectURL(bgAsset.blob);
-                document.documentElement.style.setProperty('--bg-image', `url(${bgUrl})`);
+                let bgUrl;
+                if (bgAsset.isCloudAsset && bgAsset.downloadURL) {
+                    bgUrl = bgAsset.downloadURL;
+                } else if (bgAsset.blob) {
+                    bgUrl = Utils.createObjectURL(bgAsset.blob);
+                }
+                
+                if (bgUrl) {
+                    document.documentElement.style.setProperty('--bg-image', `url(${bgUrl})`);
+                }
             }
 
             // Load header logo
             const logoAsset = await db.getAsset('headerLogo');
             if (logoAsset) {
-                const logoUrl = Utils.createObjectURL(logoAsset.blob);
-                const logoImg = document.getElementById('header-logo');
-                logoImg.src = logoUrl;
-                logoImg.style.display = 'block';
+                let logoUrl;
+                if (logoAsset.isCloudAsset && logoAsset.downloadURL) {
+                    logoUrl = logoAsset.downloadURL;
+                } else if (logoAsset.blob) {
+                    logoUrl = Utils.createObjectURL(logoAsset.blob);
+                }
+                
+                if (logoUrl) {
+                    const logoImg = document.getElementById('header-logo');
+                    logoImg.src = logoUrl;
+                    logoImg.style.display = 'block';
+                }
             }
 
             // Load favicon
             const faviconAsset = await db.getAsset('favicon');
             if (faviconAsset) {
-                const faviconUrl = Utils.createObjectURL(faviconAsset.blob);
-                const faviconLink = document.getElementById('favicon');
-                faviconLink.href = faviconUrl;
+                let faviconUrl;
+                if (faviconAsset.isCloudAsset && faviconAsset.downloadURL) {
+                    faviconUrl = faviconAsset.downloadURL;
+                } else if (faviconAsset.blob) {
+                    faviconUrl = Utils.createObjectURL(faviconAsset.blob);
+                }
+                
+                if (faviconUrl) {
+                    const faviconLink = document.getElementById('favicon');
+                    faviconLink.href = faviconUrl;
+                }
             }
         } catch (error) {
             console.error('Failed to load branding assets:', error);
