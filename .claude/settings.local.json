@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Read(//Users/samuelpinkelman/Documents/ScreenCaps/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
