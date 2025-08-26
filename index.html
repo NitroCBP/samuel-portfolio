@@ -266,7 +266,64 @@
     </button>
 
     <!-- Scripts -->
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, connectFirestoreEmulator } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyChGb6kstsKlm3YgjAJ4jKOw0_cjTTNH8A",
+            authDomain: "sam-pinkelman-portfolio.firebaseapp.com",
+            projectId: "sam-pinkelman-portfolio",
+            storageBucket: "sam-pinkelman-portfolio.firebasestorage.app",
+            messagingSenderId: "1000268904259",
+            appId: "1:1000268904259:web:fd6e34a15a6a89d86de1f6"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const auth = getAuth(app);
+
+        // Make Firebase services available globally
+        window.firebaseApp = app;
+        window.firestore = db;
+        window.firebaseStorage = storage;
+        window.firebaseAuth = auth;
+        
+        // Import Firebase functions we'll need
+        window.FirebaseFunctions = {
+            // Firestore
+            doc: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).doc,
+            getDoc: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).getDoc,
+            setDoc: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).setDoc,
+            updateDoc: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).updateDoc,
+            deleteDoc: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).deleteDoc,
+            collection: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).collection,
+            getDocs: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).getDocs,
+            addDoc: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).addDoc,
+            query: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).query,
+            orderBy: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).orderBy,
+            where: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).where,
+            onSnapshot: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')).onSnapshot,
+            // Storage
+            ref: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js')).ref,
+            uploadBytes: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js')).uploadBytes,
+            getDownloadURL: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js')).getDownloadURL,
+            deleteObject: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js')).deleteObject,
+            // Auth
+            signInWithEmailAndPassword: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js')).signInWithEmailAndPassword,
+            signOut: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js')).signOut,
+            onAuthStateChanged: (await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js')).onAuthStateChanged
+        };
+    </script>
+    
     <script src="db.js"></script>
+    <script src="firebase-db.js"></script>
     <script src="utils.js"></script>
     <script src="app.js"></script>
 </body>
